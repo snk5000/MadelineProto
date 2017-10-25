@@ -30,6 +30,8 @@ trait DialogHandler
 
         try {
             while ($this->dialog_params['count'] < $res['count']) {
+
+                print_r($this->dialog_params);
                 \danog\MadelineProto\Logger::log([\danog\MadelineProto\Lang::$current_lang['getting_dialogs']]);
                 $res = $this->method_call('messages.getDialogs', $this->dialog_params, ['datacenter' => $datacenter, 'FloodWaitLimit' => 100]);
                 foreach ($res['dialogs'] as $dialog) {
@@ -37,6 +39,12 @@ trait DialogHandler
                         $peers[] = $dialog['peer'];
                     }
                 }
+
+                if (!empty($res['dialogs']) && !empty($res['count'])) {
+                    echo "DIALOGS FOUND: ".count($res['dialogs']).' ; resCount '.$res['count'],PHP_EOL;
+                }
+                flush();
+                if (count($res['dialogs']) == 0) break;
                 $this->dialog_params['count'] += count($res['dialogs']);
                 $this->dialog_params['offset_date'] = end($res['messages'])['date'];
                 $this->dialog_params['offset_peer'] = end($res['dialogs'])['peer'];
@@ -44,6 +52,7 @@ trait DialogHandler
                 if (!isset($res['count'])) {
                     break;
                 }
+                sleep(30);
             }
         } finally {
             $this->updates_state['sync_loading'] = false;

@@ -268,6 +268,8 @@ class MTProto
         return ['encrypted_layer', 'settings', 'config', 'authorization', 'authorized', 'rsa_keys', 'last_recv', 'dh_config', 'chats', 'last_stored', 'qres', 'pending_updates', 'updates_state', 'got_state', 'channels_state', 'updates', 'updates_key', 'full_chats', 'msg_ids', 'dialog_params', 'datacenter', 'v', 'constructors', 'td_constructors', 'methods', 'td_methods', 'td_descriptions', 'twoe1984', 'twoe2047', 'twoe2048', 'zero', 'one', 'two', 'three', 'four', 'temp_requested_secret_chats', 'temp_rekeyed_secret_chats', 'secret_chats', 'hook_url', 'storage', 'emojis'];
     }
 
+    public static $noUpdates;
+
     public function __wakeup()
     {
         set_error_handler(['\danog\MadelineProto\Exception', 'ExceptionErrorHandler']);
@@ -375,7 +377,7 @@ class MTProto
         if ($this->authorized === self::LOGGED_IN && !$this->authorization['user']['bot']) {
             $this->get_dialogs($force);
         }
-        if ($this->authorized === self::LOGGED_IN && $this->settings['updates']['handle_updates'] && !$this->updates_state['sync_loading']) {
+        if (!self::$noUpdates && $this->authorized === self::LOGGED_IN && $this->settings['updates']['handle_updates'] && !$this->updates_state['sync_loading']) {
             \danog\MadelineProto\Logger::log([\danog\MadelineProto\Lang::$current_lang['getupdates_deserialization']], Logger::NOTICE);
             $this->get_updates_difference();
         }
