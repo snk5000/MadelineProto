@@ -152,7 +152,12 @@ class Logger
         self::$optional = $optional;
         self::$constructed = true;
         self::$prefix = $prefix === '' ? '' : ', '.$prefix;
+
         self::$level = $level;
+        if (MTProto::$loggerLevel) {
+            self::$level = MTProto::$loggerLevel;
+        }
+
         self::class_exists();
     }
 
@@ -190,5 +195,10 @@ class Logger
                     break;
             }
         }
+
+        if (strpos($param, 'The provided peer id')) {
+            echo 'abc';
+        }
+        flush();
     }
 }

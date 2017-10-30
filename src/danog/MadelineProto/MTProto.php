@@ -269,6 +269,10 @@ class MTProto
     }
 
     public static $noUpdates;
+    public static $loggerLevel;
+    public static $ignoreGettingFullChats;
+    public static $ignoreWakeupDialogs;
+    public static $resetInternalDB;
 
     public function __wakeup()
     {
@@ -374,9 +378,10 @@ class MTProto
             $this->get_cdn_config($this->datacenter->curdc);
             $this->setup_logger();
         }
-        if ($this->authorized === self::LOGGED_IN && !$this->authorization['user']['bot']) {
+        if (!self::$ignoreWakeupDialogs && $this->authorized === self::LOGGED_IN && !$this->authorization['user']['bot']) {
             $this->get_dialogs($force);
         }
+
         if (!self::$noUpdates && $this->authorized === self::LOGGED_IN && $this->settings['updates']['handle_updates'] && !$this->updates_state['sync_loading']) {
             \danog\MadelineProto\Logger::log([\danog\MadelineProto\Lang::$current_lang['getupdates_deserialization']], Logger::NOTICE);
             $this->get_updates_difference();

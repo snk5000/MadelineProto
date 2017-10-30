@@ -35,7 +35,9 @@ trait PeerHandler
                         $this->chats[$user['id']] = $user;
 
                         try {
-                            $this->get_pwr_chat($user['id'], false, true);
+                            if (!self::$ignoreGettingFullChats) {
+                                $this->get_pwr_chat($user['id'], false, true);
+                            }
                         } catch (\danog\MadelineProto\Exception $e) {
                             \danog\MadelineProto\Logger::log([$e->getMessage()], \danog\MadelineProto\Logger::WARNING);
                         } catch (\danog\MadelineProto\RPCErrorException $e) {
@@ -62,7 +64,9 @@ trait PeerHandler
                         $this->chats[-$chat['id']] = $chat;
 
                         try {
-                            $this->get_pwr_chat(-$chat['id'], true, true);
+                            if (!self::$ignoreGettingFullChats) {
+                                $this->get_pwr_chat(-$chat['id'], true, true);
+                            }
                         } catch (\danog\MadelineProto\Exception $e) {
                             \danog\MadelineProto\Logger::log([$e->getMessage()], \danog\MadelineProto\Logger::WARNING);
                         } catch (\danog\MadelineProto\RPCErrorException $e) {
@@ -77,7 +81,9 @@ trait PeerHandler
                     $bot_api_id = $this->to_supergroup($chat['id']);
                     if (!isset($chat['access_hash'])) {
                         if (isset($chat['username']) && !isset($this->chats[$bot_api_id])) {
-                            $this->get_pwr_chat($chat['username'], true, true);
+                            if (!self::$ignoreGettingFullChats) {
+                                $this->get_pwr_chat($chat['username'], true, true);
+                            }
                         }
                         continue;
                     }
@@ -85,8 +91,10 @@ trait PeerHandler
                         $this->chats[$bot_api_id] = $chat;
 
                         try {
-                            if (!isset($this->full_chats[$bot_api_id]) || $this->full_chats[$bot_api_id]['full']['participants_count'] !== $this->get_full_info($bot_api_id)['full']['participants_count']) {
-                                $this->get_pwr_chat($this->to_supergroup($chat['id']), true, true);
+                            if (!self::$ignoreGettingFullChats) {
+                                if (!isset($this->full_chats[$bot_api_id]) || $this->full_chats[$bot_api_id]['full']['participants_count'] !== $this->get_full_info($bot_api_id)['full']['participants_count']) {
+                                    $this->get_pwr_chat($this->to_supergroup($chat['id']), true, true);
+                                }
                             }
                         } catch (\danog\MadelineProto\Exception $e) {
                             \danog\MadelineProto\Logger::log([$e->getMessage()], \danog\MadelineProto\Logger::WARNING);
