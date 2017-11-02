@@ -425,10 +425,17 @@ trait UpdateHandler
                 return false;
             }
             if (isset($update['message']['id'], $update['message']['to_id'])) {
-                if (!$this->check_msg_id($update['message'])) {
-                    \danog\MadelineProto\Logger::log(['Duplicate update by message id, channel id: '.$channel_id], \danog\MadelineProto\Logger::ERROR);
+                try {
+                    if (!$this->check_msg_id($update['message'])) {
+                        \danog\MadelineProto\Logger::log(['Duplicate update by message id, channel id: '.$channel_id], \danog\MadelineProto\Logger::ERROR);
 
-                    return false;
+                        return false;
+                    }
+                }catch (\danog\MadelineProto\Exception $e) {
+                    if ($e->getMessage() === 'Chat forbidden') {
+                        return false;
+                    }
+                    throw $e;
                 }
             }
 

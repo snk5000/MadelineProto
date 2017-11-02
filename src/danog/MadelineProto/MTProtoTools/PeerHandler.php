@@ -22,7 +22,7 @@ trait PeerHandler
         foreach ($users as $key => $user) {
             if (!isset($user['access_hash'])) {
                 if (isset($user['username']) && !isset($this->chats[$user['id']])) {
-                    $this->get_pwr_chat($user['username'], false, true);
+                    if (!self::$ignoreGettingFullChats) $this->get_pwr_chat($user['username'], false, true);
                 }
                 continue;
             }
