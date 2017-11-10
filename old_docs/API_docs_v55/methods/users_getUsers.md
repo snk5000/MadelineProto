@@ -22,8 +22,10 @@ description: users.getUsers parameters, return type and example
 
 | Error    | Description   |
 |----------|---------------|
-|NEED_MEMBER_INVALID|The provided member is invalid|
 |SESSION_PASSWORD_NEEDED|2FA is enabled, use a password to login|
+|MEMBER_NO_LOCATION|An internal failure occurred while fetching user info (couldn't find location)|
+|NEED_MEMBER_INVALID|The provided member is invalid|
+|Timeout|A timeout occurred while fetching data from the bot|
 
 
 ### Example:

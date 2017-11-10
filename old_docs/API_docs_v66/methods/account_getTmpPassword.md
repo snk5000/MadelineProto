@@ -23,6 +23,7 @@ description: account.getTmpPassword parameters, return type and example
 
 | Error    | Description   |
 |----------|---------------|
+|PASSWORD_HASH_INVALID|The provided password hash is invalid|
 |TMP_PASSWORD_DISABLED|The temporary password is disabled|
 
 

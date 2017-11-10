@@ -24,6 +24,7 @@ description: channels.editPhoto parameters, return type and example
 | Error    | Description   |
 |----------|---------------|
 |CHANNEL_INVALID|The provided channel is invalid|
+|PHOTO_INVALID|Photo invalid|
 
 
 ### Example:

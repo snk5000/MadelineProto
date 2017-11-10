@@ -25,6 +25,7 @@ description: channels.reportSpam parameters, return type and example
 | Error    | Description   |
 |----------|---------------|
 |CHANNEL_INVALID|The provided channel is invalid|
+|INPUT_USER_DEACTIVATED|The specified user was deleted|
 
 
 ### Example:

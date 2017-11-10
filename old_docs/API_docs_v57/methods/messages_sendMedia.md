@@ -30,8 +30,10 @@ description: messages.sendMedia parameters, return type and example
 |----------|---------------|
 |CHANNEL_INVALID|The provided channel is invalid|
 |CHANNEL_PRIVATE|You haven't joined this channel/supergroup|
-|CHAT_WRITE_FORBIDDEN|You can't write in this chat|
+|CHAT_ADMIN_REQUIRED|You must be an admin in this chat to do this|
+|EXTERNAL_URL_INVALID|External URL invalid|
 |FILE_PART_0_MISSING|File part 0 missing|
+|FILE_PART_6_MISSING|File part 6 missing|
 |FILE_PART_LENGTH_INVALID|The length of a file part is invalid|
 |FILE_PARTS_INVALID|The number of file parts is invalid|
 |INPUT_USER_DEACTIVATED|The specified user was deleted|
@@ -39,10 +41,14 @@ description: messages.sendMedia parameters, return type and example
 |MEDIA_EMPTY|The provided media object is invalid|
 |PEER_ID_INVALID|The provided peer id is invalid|
 |PHOTO_EXT_INVALID|The extension of the photo is invalid|
-|STORAGE_CHECK_FAILED|Server storage check failed|
+|PHOTO_INVALID_DIMENSIONS|The photo dimensions are invalid|
+|USER_BANNED_IN_CHANNEL|You're banned from sending messages in supergroups/channels|
 |USER_IS_BLOCKED|User is blocked|
 |USER_IS_BOT|Bots can't send messages to other bots|
 |WEBPAGE_CURL_FAILED|Failure while fetching the webpage with cURL|
+|WEBPAGE_MEDIA_EMPTY|Webpage media empty|
+|STORAGE_CHECK_FAILED|Server storage check failed|
+|CHAT_WRITE_FORBIDDEN|You can't write in this chat|
 
 
 ### Example:

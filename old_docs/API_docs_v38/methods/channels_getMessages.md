@@ -25,6 +25,7 @@ description: channels.getMessages parameters, return type and example
 |----------|---------------|
 |CHANNEL_INVALID|The provided channel is invalid|
 |CHANNEL_PRIVATE|You haven't joined this channel/supergroup|
+|MESSAGE_IDS_EMPTY|No message ids were provided|
 
 
 ### Example:

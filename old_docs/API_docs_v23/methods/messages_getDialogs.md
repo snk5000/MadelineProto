@@ -27,6 +27,7 @@ description: messages.getDialogs parameters, return type and example
 |INPUT_CONSTRUCTOR_INVALID|The provided constructor is invalid|
 |OFFSET_PEER_ID_INVALID|The provided offset peer is invalid|
 |SESSION_PASSWORD_NEEDED|2FA is enabled, use a password to login|
+|Timeout|A timeout occurred while fetching data from the bot|
 
 
 ### Example:

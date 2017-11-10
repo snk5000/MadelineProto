@@ -24,7 +24,10 @@ description: messages.editChatPhoto parameters, return type and example
 | Error    | Description   |
 |----------|---------------|
 |CHAT_ID_INVALID|The provided chat id is invalid|
+|INPUT_CONSTRUCTOR_INVALID|The provided constructor is invalid|
+|INPUT_FETCH_FAIL|Failed deserializing TL payload|
 |PEER_ID_INVALID|The provided peer id is invalid|
+|PHOTO_EXT_INVALID|The extension of the photo is invalid|
 
 
 ### Example:

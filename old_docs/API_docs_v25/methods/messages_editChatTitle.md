@@ -23,6 +23,7 @@ description: messages.editChatTitle parameters, return type and example
 
 | Error    | Description   |
 |----------|---------------|
+|CHAT_ID_INVALID|The provided chat id is invalid|
 |NEED_CHAT_INVALID|The provided chat is invalid|
 
 

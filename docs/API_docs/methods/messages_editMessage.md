@@ -11,12 +11,14 @@ description: messages.editMessage parameters, return type and example
 | Name     |    Type       | Required |
 |----------|---------------|----------|
 |no\_webpage|[Bool](../types/Bool.md) | Optional|
+|stop\_geo\_live|[Bool](../types/Bool.md) | Optional|
 |peer|[InputPeer](../types/InputPeer.md) | Yes|
 |id|[int](../types/int.md) | Yes|
 |message|[string](../types/string.md) | Optional|
 |reply\_markup|[ReplyMarkup](../types/ReplyMarkup.md) | Optional|
 |entities|Array of [MessageEntity](../types/MessageEntity.md) | Optional|
 |parse\_mode| [string](../types/string.md) | Optional |
+|geo\_point|[InputGeoPoint](../types/InputGeoPoint.md) | Optional|
 
 
 ### Return type: [Updates](../types/Updates.md)
@@ -29,13 +31,15 @@ description: messages.editMessage parameters, return type and example
 | Error    | Description   |
 |----------|---------------|
 |CHANNEL_INVALID|The provided channel is invalid|
-|CHAT_WRITE_FORBIDDEN|You can't write in this chat|
-|MESSAGE_AUTHOR_REQUIRED|Message author required|
+|CHANNEL_PRIVATE|You haven't joined this channel/supergroup|
+|INPUT_USER_DEACTIVATED|The specified user was deleted|
 |MESSAGE_EDIT_TIME_EXPIRED|You can't edit this message anymore, too much time has passed since its creation.|
 |MESSAGE_EMPTY|The provided message is empty|
 |MESSAGE_ID_INVALID|The provided message id is invalid|
 |MESSAGE_NOT_MODIFIED|The message text has not changed|
 |PEER_ID_INVALID|The provided peer id is invalid|
+|CHAT_WRITE_FORBIDDEN|You can't write in this chat|
+|MESSAGE_AUTHOR_REQUIRED|Message author required|
 
 
 ### Example:
@@ -56,7 +60,7 @@ if (isset($number)) { // Login as a user
     $MadelineProto->complete_phone_login($code);
 }
 
-$Updates = $MadelineProto->messages->editMessage(['no_webpage' => Bool, 'peer' => InputPeer, 'id' => int, 'message' => 'string', 'reply_markup' => ReplyMarkup, 'entities' => [MessageEntity], 'parse_mode' => 'string', ]);
+$Updates = $MadelineProto->messages->editMessage(['no_webpage' => Bool, 'stop_geo_live' => Bool, 'peer' => InputPeer, 'id' => int, 'message' => 'string', 'reply_markup' => ReplyMarkup, 'entities' => [MessageEntity], 'parse_mode' => 'string', 'geo_point' => InputGeoPoint, ]);
 ```
 
 Or, if you're using the [PWRTelegram HTTP API](https://pwrtelegram.xyz):
@@ -68,7 +72,7 @@ POST/GET to `https://api.pwrtelegram.xyz/botTOKEN/madeline`
 Parameters:
 
 * method - messages.editMessage
-* params - `{"no_webpage": Bool, "peer": InputPeer, "id": int, "message": "string", "reply_markup": ReplyMarkup, "entities": [MessageEntity], "parse_mode": "string"}`
+* params - `{"no_webpage": Bool, "stop_geo_live": Bool, "peer": InputPeer, "id": int, "message": "string", "reply_markup": ReplyMarkup, "entities": [MessageEntity], "parse_mode": "string""geo_point": InputGeoPoint, }`
 
 
 
@@ -79,13 +83,15 @@ POST/GET to `https://api.pwrtelegram.xyz/userTOKEN/messages.editMessage`
 Parameters:
 
 parse_mode - string
+geo_point - Json encoded InputGeoPoint
+
 
 
 
 Or, if you're into Lua:
 
 ```
-Updates = messages.editMessage({no_webpage=Bool, peer=InputPeer, id=int, message='string', reply_markup=ReplyMarkup, entities={MessageEntity}, parse_mode='string', })
+Updates = messages.editMessage({no_webpage=Bool, stop_geo_live=Bool, peer=InputPeer, id=int, message='string', reply_markup=ReplyMarkup, entities={MessageEntity}, parse_mode='string', geo_point=InputGeoPoint, })
 ```
 
 

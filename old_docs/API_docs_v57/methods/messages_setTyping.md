@@ -26,8 +26,10 @@ description: messages.setTyping parameters, return type and example
 |CHANNEL_INVALID|The provided channel is invalid|
 |CHANNEL_PRIVATE|You haven't joined this channel/supergroup|
 |CHAT_ID_INVALID|The provided chat id is invalid|
-|CHAT_WRITE_FORBIDDEN|You can't write in this chat|
 |PEER_ID_INVALID|The provided peer id is invalid|
+|USER_BANNED_IN_CHANNEL|You're banned from sending messages in supergroups/channels|
+|USER_IS_BLOCKED|User is blocked|
+|CHAT_WRITE_FORBIDDEN|You can't write in this chat|
 
 
 ### Example:

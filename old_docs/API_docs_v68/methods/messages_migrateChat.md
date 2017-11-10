@@ -24,6 +24,7 @@ description: messages.migrateChat parameters, return type and example
 |----------|---------------|
 |CHAT_ID_INVALID|The provided chat id is invalid|
 |PEER_ID_INVALID|The provided peer id is invalid|
+|CHAT_ADMIN_REQUIRED|You must be an admin in this chat to do this|
 
 
 ### Example:

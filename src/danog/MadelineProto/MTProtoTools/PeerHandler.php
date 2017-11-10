@@ -29,9 +29,6 @@ trait PeerHandler
             switch ($user['_']) {
                 case 'user':
                     if (!isset($this->chats[$user['id']]) || $this->chats[$user['id']] !== $user) {
-                        /*foreach (str_split(pack('q', $user['access_hash'])) as $char) {
-                            var_dump(ord($char));
-                        }*/
                         $this->chats[$user['id']] = $user;
 
                         try {
@@ -65,7 +62,7 @@ trait PeerHandler
 
                         try {
                             if (!self::$ignoreGettingFullChats) {
-                                $this->get_pwr_chat(-$chat['id'], true, true);
+                                $this->get_pwr_chat(-$chat['id'], $this->settings['peer']['full_fetch'], true);
                             }
                         } catch (\danog\MadelineProto\Exception $e) {
                             \danog\MadelineProto\Logger::log([$e->getMessage()], \danog\MadelineProto\Logger::WARNING);
@@ -82,7 +79,7 @@ trait PeerHandler
                     if (!isset($chat['access_hash'])) {
                         if (isset($chat['username']) && !isset($this->chats[$bot_api_id])) {
                             if (!self::$ignoreGettingFullChats) {
-                                $this->get_pwr_chat($chat['username'], true, true);
+                                $this->get_pwr_chat($chat['username'], $this->settings['peer']['full_fetch'], true);
                             }
                         }
                         continue;
@@ -93,7 +90,7 @@ trait PeerHandler
                         try {
                             if (!self::$ignoreGettingFullChats) {
                                 if (!isset($this->full_chats[$bot_api_id]) || $this->full_chats[$bot_api_id]['full']['participants_count'] !== $this->get_full_info($bot_api_id)['full']['participants_count']) {
-                                    $this->get_pwr_chat($this->to_supergroup($chat['id']), true, true);
+                                    $this->get_pwr_chat($this->to_supergroup($chat['id']), $this->settings['peer']['full_fetch'], true);
                                 }
                             }
                         } catch (\danog\MadelineProto\Exception $e) {
@@ -222,7 +219,7 @@ trait PeerHandler
                 return $this->gen_all($this->chats[$id]);
             }
             if (!isset($this->settings['pwr']['requests']) || $this->settings['pwr']['requests'] === true) {
-                $dbres = json_decode(@file_get_contents('https://id.pwrtelegram.xyz/db/getusername?id='.$id, false, stream_context_create(['http'=> [
+                $dbres = json_decode(@file_get_contents('https://id.pwrtelegram.xyz/db/getusername?id='.$id, false, stream_context_create(['http' => [
                         'timeout' => 2,
                     ],
                 ])), true);
@@ -401,7 +398,7 @@ trait PeerHandler
                         $res[$key] = $full['Chat'][$key];
                     }
                 }
-                foreach (['can_set_stickers', 'stickerset', 'can_view_participants', 'can_set_username', 'participants_count', 'admins_count', 'kicked_count', 'banned_count', 'migrated_from_chat_id', 'migrated_from_max_id', 'pinned_msg_id', 'about'] as $key) {
+                foreach (['can_set_stickers', 'stickerset', 'can_view_participants', 'can_set_username', 'participants_count', 'admins_count', 'kicked_count', 'banned_count', 'migrated_from_chat_id', 'migrated_from_max_id', 'pinned_msg_id', 'about', 'hidden_prehistory', 'available_min_id'] as $key) {
                     if (isset($full['full'][$key])) {
                         $res[$key] = $full['full'][$key];
                     }
@@ -418,7 +415,7 @@ trait PeerHandler
                 }
                 break;
         }
-        if (isset($res['participants'])) {
+        if (isset($res['participants']) && $fullfetch) {
             foreach ($res['participants'] as $key => $participant) {
                 $newres = [];
                 $newres['user'] = $this->get_pwr_chat($participant['user_id'], false, false);
@@ -462,7 +459,7 @@ trait PeerHandler
                 $res['participants'][$key] = $newres;
             }
         }
-        if (!isset($res['participants']) && isset($res['can_view_participants']) && $res['can_view_participants']) {
+        if (!isset($res['participants']) && isset($res['can_view_participants']) && $res['can_view_participants'] && $fullfetch) {
             $res['participants'] = [];
             $limit = 200;
             $filters = ['channelParticipantsRecent', 'channelParticipantsAdmins', 'channelParticipantsKicked', 'channelParticipantsBots', 'channelParticipantsBanned'];
@@ -470,7 +467,7 @@ trait PeerHandler
                 $offset = -$limit;
 
                 try {
-                    $gres = $this->method_call('channels.getParticipants', ['channel' => $full['InputChannel'], 'filter' => ['_' => $filter, 'q' => ''], 'offset' => $offset += $limit, 'limit' => $limit], ['datacenter' => $this->datacenter->curdc]);
+                    $gres = $this->method_call('channels.getParticipants', ['channel' => $full['InputChannel'], 'filter' => ['_' => $filter, 'q' => ''], 'offset' => $offset += $limit, 'limit' => $limit, 'hash' => 0], ['datacenter' => $this->datacenter->curdc]);
                 } catch (\danog\MadelineProto\RPCErrorException $e) {
                     if ($e->rpc === 'CHAT_ADMIN_REQUIRED') {
                         continue;
@@ -525,7 +522,7 @@ trait PeerHandler
                         }
                         $res['participants'][$participant['user_id']] = $newres;
                     }
-                    $gres = $this->method_call('channels.getParticipants', ['channel' => $full['InputChannel'], 'filter' => ['_' => $filter, 'q' => ''], 'offset' => $offset += $limit, 'limit' => $limit], ['datacenter' => $this->datacenter->curdc]);
+                    $gres = $this->method_call('channels.getParticipants', ['channel' => $full['InputChannel'], 'filter' => ['_' => $filter, 'q' => ''], 'offset' => $offset += $limit, 'limit' => $limit, 'hash' => 0], ['datacenter' => $this->datacenter->curdc]);
 
                     if (empty($gres['participants'])) {
                         break;
@@ -533,6 +530,9 @@ trait PeerHandler
                 }
             }
             $res['participants'] = array_values($res['participants']);
+        }
+        if (!$fullfetch) {
+            unset($res['participants']);
         }
         if ($fullfetch || $send) {
             $this->store_db($res);

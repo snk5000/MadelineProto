@@ -26,6 +26,7 @@ description: messages.getInlineBotResults parameters, return type and example
 |----------|---------------|
 |BOT_INLINE_DISABLED|This bot can't be used in inline mode|
 |BOT_INVALID|This is not a valid bot|
+|CHANNEL_PRIVATE|You haven't joined this channel/supergroup|
 |Timeout|A timeout occurred while fetching data from the bot|
 
 
